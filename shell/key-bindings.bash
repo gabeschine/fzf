@@ -55,14 +55,10 @@ __fzf_history__() (
   local line
   shopt -u nocaseglob nocasematch
   line=$(
-    HISTTIMEFORMAT= history |
+    cat ~/.bash_history_all | grep -v "end session thatguy" |
     FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS --tac -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS +m" $(__fzfcmd) |
-    command grep '^ *[0-9]') &&
-    if [[ $- =~ H ]]; then
-      sed 's/^ *\([0-9]*\)\** .*/!\1/' <<< "$line"
-    else
-      sed 's/^ *\([0-9]*\)\** *//' <<< "$line"
-    fi
+    cut -d " " -f 4-)
+  echo $line
 )
 
 if [[ ! -o vi ]]; then
